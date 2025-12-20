@@ -1,0 +1,27 @@
+{
+  "name": "document-verification-backend",
+  "version": "1.0.0",
+  "description": "Backend for Document Verification System",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "debug": "node start-debug.js",
+    "test": "node test-local.js",
+    "diagnose": "node diagnose.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "@azure/storage-blob": "^12.17.0",
+    "@azure/cosmos": "^4.0.0",
+    "uuid": "^9.0.1",
+    "axios": "^1.6.0",
+    "form-data": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
