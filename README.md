@@ -525,9 +525,8 @@ This project demonstrates mastery of:
 4. **Security**: Report security issues via [SECURITY.md](SECURITY.md)
 
 ### Maintainers
-- **Primary Developer**: [Your Name]
-- **Project Supervisor**: [Supervisor Name]
-- **Institution**: [Your College/University]
+- **Primary Developer**: Tushar sahu
+- **Institution**: Rungta college of enginnering and technology
 
 ---
 
