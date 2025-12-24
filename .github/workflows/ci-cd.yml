@@ -15,33 +15,37 @@ jobs:
         node-version: [20.x]
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
 
-    - name: Install Backend Dependencies
-      working-directory: backend
-      run: npm ci
+      - name: Install Backend Dependencies
+        working-directory: backend
+        run: npm ci
 
-    - name: Install Frontend Dependencies
-      working-directory: frontend
-      run: npm ci
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
 
-    - name: Run Backend Tests
-      working-directory: backend
-      run: npm test
+      - name: Run Backend Tests
+        working-directory: backend
+        run: npm test
 
-    - name: Run Frontend Tests
-      working-directory: frontend
-      run: npm test -- --coverage --watchAll=false
+      - name: Run Frontend Tests
+        working-directory: frontend
+        run: npm test -- --coverage --watchAll=false
 
-    - name: Build Frontend
-      working-directory: frontend
-      run: npm run build
+      - name: Build Frontend
+        working-directory: frontend
+        run: npm run build
 
   deploy:
     needs: test
@@ -49,18 +53,20 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
 
-    - name: Build and Deploy to Azure
-      env:
-        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-        AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
-        COSMOS_DB_ENDPOINT: ${{ secrets.COSMOS_DB_ENDPOINT }}
-        COSMOS_DB_KEY: ${{ secrets.COSMOS_DB_KEY }}
-      run: |
-        echo "Deploying to Azure..."
+      - name: Deploy to Azure
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          COSMOS_DB_ENDPOINT: ${{ secrets.COSMOS_DB_ENDPOINT }}
+          COSMOS_DB_KEY: ${{ secrets.COSMOS_DB_KEY }}
+        run: |
+          echo "Deploying to Azure..."
+          # add your Azure deploy commands here
