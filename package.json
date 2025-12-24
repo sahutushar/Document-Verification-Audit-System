@@ -2,10 +2,11 @@
   "name": "document-verification-system",
   "version": "1.0.0",
   "description": "A secure document verification and audit system using Azure services",
-  "main": "index.js",
+  "main": "backend/src/server.js",
   "scripts": {
+    "start": "cd backend && npm start",
+    "start": "cd backend && npm start",
     "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
-    "backend:dev": "cd backend && npm run dev",
     "frontend:dev": "cd frontend && npm start",
     "backend:start": "cd backend && npm start",
     "frontend:start": "cd frontend && npm start",
