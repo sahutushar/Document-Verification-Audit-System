@@ -64,14 +64,42 @@ const UploadDocument = () => {
     setResult(null);
 
     try {
+      console.log('📎 Starting upload process...');
+      console.log('📎 API URL:', process.env.REACT_APP_API_URL);
+      
       const formData = new FormData();
       formData.append('document', file);
       
+      console.log('📎 FormData created, calling uploadDocument...');
       const response = await uploadDocument(formData);
+      console.log('✅ Upload successful:', response);
       setResult(response);
     } catch (err) {
-      console.error('Upload error details:', err);
-      setError(err.response?.data?.error || err.message || 'Upload failed');
+      console.error('❌ Upload error details:', {
+        message: err.message,
+        code: err.code,
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        stack: err.stack
+      });
+      
+      let errorMessage = 'Upload failed';
+      
+      if (err.message === 'Network Error' || err.message.includes('fetch')) {
+        errorMessage = 'Network error - Check if backend is running and CORS is configured';
+      } else if (err.code === 'ECONNREFUSED') {
+        errorMessage = 'Cannot connect to backend server';
+      } else if (err.response?.status === 413) {
+        errorMessage = 'File too large (max 10MB)';
+      } else if (err.response?.status === 400) {
+        errorMessage = err.response?.data?.error || 'Invalid file or request';
+      } else if (err.response?.status === 500) {
+        errorMessage = 'Server error - Please try again later';
+      } else {
+        errorMessage = err.response?.data?.error || err.message || 'Upload failed';
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
