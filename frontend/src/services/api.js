@@ -26,10 +26,23 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error('❌ API Error:', error.message);
+    console.error('❌ API Error Details:', {
+      message: error.message,
+      code: error.code,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      url: error.config?.url,
+      method: error.config?.method
+    });
+    
     if (error.code === 'ECONNREFUSED') {
       console.error('❌ Backend server is not running on', API_BASE_URL);
+    } else if (error.message === 'Network Error') {
+      console.error('❌ Network Error - Check CORS configuration');
+    } else if (error.message.includes('fetch')) {
+      console.error('❌ Fetch Error - Possible CORS or network issue');
     }
+    
     return Promise.reject(error);
   }
 );
@@ -74,6 +87,19 @@ export const getAuditLogs = async () => {
     console.error('Error fetching audit logs:', error);
     // Return empty array on error to prevent crashes
     return [];
+  }
+};
+
+// Test API connectivity
+export const testConnection = async () => {
+  try {
+    console.log('🔍 Testing API connection to:', API_BASE_URL);
+    const response = await api.get('/documents/health');
+    console.log('✅ API Connection successful:', response.data);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('❌ API Connection failed:', error.message);
+    return { success: false, error: error.message };
   }
 };
 
